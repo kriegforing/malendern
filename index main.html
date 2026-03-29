@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malendern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..900&family=Sofia+Sans+Condensed:wght@900&display=swap" rel="stylesheet">
+<style>
+
+
+
+/* ══ RESET ══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #000;
+  color: #fff;
+  font-family: 'Roboto Flex', sans-serif;
+  font-variation-settings: 'wdth' 100;
+  overflow-x: hidden;
+}
+img { display: block; }
+
+.scroll-paint {
+  position: fixed;
+  top: 22px;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Краска */
+.paint-fill {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  width: 0;
+  height: 102px;
+  background: linear-gradient(90deg, #e8d9ef 0%, #edd0c0 100%);
+  transition: width 0.08s linear;
+  z-index: 1;
+}
+
+/* Логотип */
+.paint-logo {
+  position: absolute;
+  left: 32px;
+  top: 78px;
+  transform: translateY(-50%);
+  width: 215px;
+  height: auto;
+  z-index: 2;
+}
+
+/* Валик */
+.paint-roller {
+  position: absolute;
+  top: 8px;
+  left: 404px;
+  width: 891px;
+  height: auto;
+  z-index: 3;
+  transform: translateX(0);
+  transform-origin: left top;
+  transition: transform 0.08s linear;
+}
+/* ══════════════════════════════════════
+   NAV — fixed, top left
+══════════════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 20px; left: 40px;
+  z-index: 100;
+}
+.nav img {
+  width: 140px;
+  height: auto;
+}
+
+/* ══════════════════════════════════════
+   S1 — HERO
+══════════════════════════════════════ */
+.s1 {
+  position: relative;
+  background: #000;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+/* FIX 1+2: roller bar — full width, logo centered vertically on it */
+.roller-bar-wrap {
+  position: absolute;
+  top: 42px;
+  left: -40px;
+  width: 480px;
+  height: 80px;
+  z-index: 3;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+}
+.roller-bar-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #efddf2 0%, #f2c8ae 60%, #89e28c 100%);
+  border-radius: 6px;
+}
+/* Roller paint icon sits to the LEFT of the bar, vertically centered */
+.roller-icon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: auto;
+  z-index: 5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.3));
+}
+
+/* FIX 3: proper spacing for hero text block */
+.hero-text {
+  position: relative;
+  z-index: 2;
+  padding: 160px 60px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.hero-question {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 4.2vw, 60px);
+  line-height: 1;
+  padding: 160px 80px 10px;
+  text-align: center;
+  color: #fff;
+}
+.hero-tagline {
+  font-size: clamp(15px, 1.6vw, 24px);
+  font-weight: 300;
+  color: #ccc;
+  text-align: center;
+}
+/* Big title SVG */
+.hero-title-img {
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+  margin-top: 10px;
+}
+/* FIX 4: desc text BELOW the big title */
+.hero-desc {
+  font-size: clamp(14px, 1.4vw, 20px);
+  font-weight: 300;
+  color: #ccc;
+  line-height: 1.6;
+  max-width: 520px;
+  text-align: left;
+  margin-top: 4px;
+  margin-left: 64px;
+}
+
+/* Bed + clothes scene */
+.hero-bed-scene {
+  position: relative;
+  width: 100%;
+  margin-top: 40px;
+}
+.hero-bed-img {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.hero-clothes-overlay {
+  position: absolute;
+  bottom: 18%;
+  left: 28%;
+  width: 48%;
+  transform: rotate(-5deg);
+  pointer-events: none;
+  filter: drop-shadow(0 16px 32px rgba(0,0,0,.45));
+}
+.hero-cat {
+  position: absolute;
+  bottom: 4%;
+  right: 6%;
+  width: 20%;
+  max-width: 260px;
+  transform: rotate(-4deg);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,.4));
+}
+
+/* White diagonal stripe */
+.stripe {
+  position: relative;
+  z-index: 5;
+  width: 110%;
+  margin-left: -5%;
+  height: 44px;
+  background: #fff;
+  transform: rotate(-2.2deg);
+  margin-top: -18px;
+}
+
+/* ══════════════════════════════════════
+   S2 — BEFORE/AFTER (FIX 5: single slider, no repeat)
+══════════════════════════════════════ */
+.s2 {
+  background: #000;
+  padding: 70px 0 50px;
+}
+.ba-title-wrap {
+  text-align: center;
+  margin-bottom: 36px;
+  padding: 0 40px;
+}
+.ba-title-wrap img {
+  display: inline-block;
+  max-width: 88%;
+  height: auto;
+}
+
+.ba-slider-wrap {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: ew-resize;
+  user-select: none;
+  aspect-ratio: 16 / 7;
+  background: #111;
+}
+.ba-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+/* BEFORE layer: bed + clothes stacked */
+.ba-before-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.ba-before-wrap .ba-bed   { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ba-before-wrap .ba-clothes {
+  position: absolute;
+  bottom: 15%; left: 22%;
+  width: 55%;
+  transform: rotate(-6deg);
+  pointer-events: none;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,.5));
+  transition: none;
+}
+/* AFTER layer: clean bed, clips from left */
+.ba-after {
+  z-index: 2;
+  clip-path: inset(0 50% 0 0);
+}
+.ba-divider {
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 4px;
+  background: #fff;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+}
+.ba-handle {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px; height: 52px;
+  background: #fff; border-radius: 50%;
+  box-shadow: 0 2px 18px rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  z-index: 6; pointer-events: none;
+}
+.ba-handle::before, .ba-handle::after {
+  content: ''; border: 8px solid transparent;
+}
+.ba-handle::before { border-right: 10px solid #333; }
+.ba-handle::after  { border-left:  10px solid #333; }
+.ba-lbl {
+  position: absolute; bottom: 14px;
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900; font-size: 26px; color: #fff;
+  background: rgba(0,0,0,.45); padding: 3px 12px; border-radius: 4px;
+  z-index: 4; pointer-events: none;
+}
+.ba-lbl-l { left: 14px; }
+.ba-lbl-r { right: 14px; }
+.ba-hint { text-align: center; color: #555; font-size: 13px; margin-top: 12px; }
+
+/* ══════════════════════════════════════
+   S3 — CAPTCHA
+   FIX 6: clothes on BED, not floating
+   FIX 7: reset button on captcha
+   FIX 8: no gap/bg between sections — seamless
+══════════════════════════════════════ */
+s3 {
+  background: #000;
+  padding: 0 0 80px 60px;
+  display: flex;
+}
+
+.s3-row {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.s3-left {
+  flex: 0 0 400px;
+}
+
+.s3-right {
+  flex: 1;
+  margin-right: 0;
+  overflow: hidden;
+}
+
+.s3-title {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 3.6vw, 56px);
+  line-height: 1.05;
+  margin-bottom: 28px;
+  margin-top: 0;
+  color: #fff;
+}
+
+.s3-left { flex: 0 0 400px; padding-top: 10px; }
+.s3-title {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 3.6vw, 56px);
+  line-height: 1.05;
+  margin-bottom: 28px;
+}
+.captcha-box {
+  width: 100%;
+  background: #fff; color: #000;
+  border: 1px solid #d6d6d6; border-radius: 2px;
+  box-shadow: 0 1px 10px rgba(0,0,0,.2);
+  margin-left: 30px;
+  overflow: hidden;
+}
+.cap-header {
+  background: #468ee5; color: #fff;
+  padding: 16px 20px; font-size: 16px; font-weight: 500; line-height: 1.4;
+}
+.cap-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; background: #ccc; padding: 2px;
+}
+.cap-cell {
+  position: relative; background: #efefef;
+  aspect-ratio: 1; cursor: pointer; overflow: hidden;
+}
+.cap-cell.sel { outline: 4px solid #468ee5; outline-offset: -4px; }
+.cap-cell img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.cap-tick {
+  position: absolute; inset: 0;
+  background: rgba(70,142,229,.45);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .15s;
+}
+.cap-cell.sel .cap-tick { opacity: 1; }
+.cap-tick svg { width: 32px; height: 32px; fill: #fff; }
+.cap-footer {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-top: 1px solid #dfdfdf;
+}
+.cap-icons { display: flex; gap: 8px; align-items: center; }
+.cap-icons svg { width: 24px; height: 24px; fill: #999; cursor: pointer; }
+/* FIX 7: reset button styled like the icon refresh */
+.cap-reset-btn {
+  background: none; border: none; cursor: pointer; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .4s;
+}
+.cap-reset-btn:hover { transform: rotate(180deg); }
+.cap-reset-btn svg { width: 24px; height: 24px; fill: #999; }
+.cap-btn {
+  background: #468ee5; color: #fff; border: none;
+  padding: 8px 16px; border-radius: 2px;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'Roboto Flex', sans-serif;
+  transition: background .2s;
+}
+.cap-btn:hover { background: #2d72c8; }
+
+/* FIX 6: Right side — clothes ON bed, not floating */
+.s3-right {
+  flex: 1;
+  position: relative;
+  margin-right: 0;
+  margin-top: 60px;
+  overflow: hidden;
+}
+.cap-bed-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 0px;
+  overflow: hidden;
+  background: #000;
+}
+.cap-bed-base {
+  width: 100%; display: block;
+  object-fit: cover;
+}
+/* Clothes items positioned ON TOP of the bed image */
+.cap-clutter-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.clutter-item {
+  position: absolute;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.clutter-item img {
+  width: 100%; height: 100%;
+  object-fit: contain; display: block;
+  /* black bg is transparent on these PNGs */
+}
+.clutter-item.gone {
+  opacity: 0;
+  transform: scale(.15) translateY(-120px) rotate(30deg) !important;
+}
+
+/* ══════════════════════════════════════
+   S4 — FENGSHUI
+   FIX 9: icons in a grid, not a list; reset button
+══════════════════════════════════════ */
+.s4 {
+  background: #000;
+  padding: 80px 60px;
+}
+.s4-title {
+  text-align: center; margin-bottom: 46px;
+}
+.s4-title img {
+  display: inline-block; max-width: 70%; height: auto;
+}
+.s4-desc-row {
+  display: flex; gap: 80px; margin-bottom: 44px;
+}
+.s4-desc-row p {
+  flex: 1;
+  font-size: clamp(14px, 1.4vw, 20px);
+  font-weight: 300; color: #ccc; line-height: 1.7;
+}
+
+.s4-hint {
+  text-align: center; color: #666; font-size: 16px; margin-bottom: 28px;
+}
+
+.s4-workspace {
+  display: flex; gap: 50px; align-items: flex-start;
+}
+
+.fs-question {  
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 4.2vw, 60px);
+  line-height: 1;
+  padding: 0px 0px 10px;
+  text-align: left;
+  color: #fff;
+}
+
+/* Room box */
+.room-wrap {
+  flex: 0 0 auto;
+  width: min(680px, 56vw);
+  position: relative;
+}
+.room-wrap img.room-svg {
+  width: 100%; height: auto; display: block;
+}
+.room-drop-overlay {
+  position: absolute;
+  inset: 7% 7% 14% 7%;
+  z-index: 2;
+  border-radius: 6px;
+  transition: background .2s;
+}
+.room-drop-overlay.over {
+  background: rgba(70,142,229,.07);
+  outline: 3px dashed rgba(70,142,229,.55);
+}
+.placed-item {
+  position: absolute; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  cursor: move;
+  animation: placeIn .3s ease;
+}
+@keyframes placeIn {
+  from { transform: scale(.4) translateY(-20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.placed-item img { width: 120px; height: 120px; object-fit: contain; }
+.placed-item span {
+  font-size: 12px; color: #fff;
+  background: rgba(0,0,0,.55); padding: 2px 6px; border-radius: 3px;
+}
+.fs-warning {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: rgba(190,40,40,.96); color: #fff;
+  padding: 18px 26px; border-radius: 12px;
+  font-size: 16px; font-weight: 500; text-align: center;
+  z-index: 20; animation: warnPop .4s ease;
+  box-shadow: 0 8px 40px rgba(0,0,0,.5); pointer-events: none;
+}
+@keyframes warnPop {
+  from { transform: translate(-50%,-50%) scale(.6); opacity: 0; }
+  60%  { transform: translate(-50%,-50%) scale(1.06); }
+  to   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+}
+
+/* FIX 9: items panel as icon grid, not list */
+.items-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.items-panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.items-panel-title {
+  font-size: 16px; font-weight: 300; color: #666;
+}
+
+/* Reset button for fengshui */
+.fs-reset-btn {
+  background: rgba(255,255,255,.1);
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background .2s, transform .4s;
+}
+.fs-reset-btn:hover {
+  background: rgba(255,255,255,.2);
+  transform: rotate(180deg);
+}
+.fs-reset-btn svg { width: 22px; height: 22px; fill: #fff; }
+
+/* Icon grid 2×2 */
+.drag-items-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.drag-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 14px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-radius: 10px;
+  cursor: grab;
+  transition: background .2s, opacity .3s, border-color .2s;
+  background: transparent;
+}
+.drag-item:hover { background: rgba(255,255,255,.07); border-color: #fff; }
+.drag-item:active { cursor: grabbing; }
+.drag-item.used { opacity: .25; pointer-events: none; border-style: dashed; }
+.drag-item img { width: 64px; height: 64px; object-fit: contain; }
+.drag-item-name {
+  font-size: 17px; font-weight: 300; color: #fff;
+  font-family: 'Roboto Flex', sans-serif;
+}
+
+/* ══════════════════════════════════════
+   S5 — 4 WALLS + footer transition
+   FIX 10: gap between s4 and footer
+══════════════════════════════════════ */
+.s5 {
+  background: #000;
+  padding: 80px 60px 60px; /* FIX 10: padding bottom before footer */
+}
+.footer-tagline {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(54px, 7.5vw, 110px);
+  line-height: .97; color: #fff;
+  margin-bottom: 36px;
+  padding-left: 60px;
+}
+.s5-logo-wrap {
+  width: 100vw;
+  margin-left: -60px; /* компенсирует padding s5 */
+  overflow: hidden;
+  line-height: 0;
+  max-width: 100vw;
+  padding-left: 60px;
+  padding-bottom: 100px
+}
+
+.s5-logo-full {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+  padding-left: 60px
+}
+
+.footer-gradient-bar {
+  height: 12px;
+  border-radius: 8px;
+  width: 55%;
+  background: linear-gradient(90deg,
+    #0084ff 0%, #7b6cf0 35%, #d86fa8 65%, #ff9090 100%);
+}
+
+/* ══════════════════════════════════════
+   S6 — FOOTER (animated gradient)
+   FIX 10: logo smaller, proper padding
+══════════════════════════════════════ */
+.s6 {
+  position: relative;
+  overflow: hidden;
+  padding: 50px 60px 44px;
+}
+.footer-bg-anim {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,
+    #b32f32, #b1434f, #ae5670,
+    #c27e86, #d7a6a1, #ebcfbb, #fff7d5);
+  background-size: 400% 400%;
+  animation: gradFlow 8s ease infinite;
+  z-index: 0;
+}
+@keyframes gradFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.footer-inner {
+  position: relative; z-index: 1;
+}
+/* FIX 10: logo smaller */
+.footer-logo-big {
+  width: 70%;
+  max-width: 700px;
+  height: auto; display: block;
+  margin-bottom: 28px;
+}
+.footer-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.footer-logo-sm {
+  width: 120px; height: auto;
+}
+.footer-year {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900; font-size: 32px; color: #000;
+}
+
+/* ══ TOAST ══ */
+.toast {
+  position: fixed; bottom: 26px; right: 26px;
+  background: #1a1a1a; color: #fff;
+  border: 1px solid #333; padding: 13px 20px;
+  border-radius: 8px; font-size: 14px;
+  z-index: 9999; opacity: 0; transform: translateY(14px);
+  transition: opacity .3s, transform .3s; pointer-events: none;
+  max-width: 280px;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — все экраны
+══════════════════════════════════════
+
+  1440px+  Desktop (дизайн по умолчанию)
+  1024px   Ноутбук
+   768px   Планшет
+   480px   Большой телефон
+   360px   Маленький телефон
+══════════════════════════════════════ */
+
+/* ── Ноутбук / маленький десктоп ── */
+@media (max-width: 1024px) {
+  .hero-text { padding: 130px 40px 0; }
+  .hero-desc  { max-width: 460px; }
+  .s3  { padding: 0px 0px 0px; gap: 0px; }
+  .s3-left { flex: 0 0 360px; }
+  .s4  { padding: 70px 40px; }
+  .s4-desc-row { gap: 40px; }
+  .s5  { padding: 70px 40px 50px; }
+  .s6  { padding: 46px 40px 40px; }
+  .footer-logo-big { max-width: 560px; }
+}
+
+/* ── Планшет ── */
+@media (max-width: 768px) {
+  /* Nav */
+  .nav { left: 20px; top: 14px; }
+  .nav img { width: 110px; }
+
+  /* Hero */
+  .hero-text { padding: 110px 24px 0; gap: 12px; }
+  .hero-question { font-size: clamp(24px, 5vw, 40px); }
+  .hero-tagline   { font-size: clamp(13px, 2.5vw, 18px); }
+  .hero-title-img { max-width: 100%; }
+  .hero-desc      { font-size: 15px; max-width: 100%; }
+  .hero-clothes-overlay { width: 55%; left: 22%; bottom: 20%; }
+  .hero-cat { width: 24%; right: 2%; }
+  .stripe { height: 34px; }
+
+  /* BA Slider */
+  .s2 { padding: 50px 0 40px; }
+  .ba-slider-wrap { width: 96%; aspect-ratio: 4/3; border-radius: 10px; }
+  .ba-lbl { font-size: 20px; padding: 2px 10px; }
+
+  /* Captcha — stack vertically */
+  .s3 {
+    flex-direction: column;
+    padding: 20px 24px 60px;
+    gap: 32px;
+  }
+  .s3-left { flex: none; width: 100%; }
+  .s3-right { width: 100%; margin-top: 0; }
+  .captcha-box { max-width: 100%; }
+
+  /* Fengshui */
+  .s4 { padding: 60px 24px; }
+  .s4-desc-row { flex-direction: column; gap: 16px; }
+  .s4-workspace { flex-direction: column; gap: 32px; }
+  .room-wrap { width: 100%; }
+  .items-panel { width: 100%; }
+  .drag-items-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .drag-item { padding: 14px 10px; }
+  .drag-item img { width: 48px; height: 48px; }
+  .drag-item-name { font-size: 14px; }
+
+  /* Footer sections */
+  .s5 { padding: 60px 24px 44px; }
+  .footer-tagline { font-size: clamp(40px, 8vw, 70px); }
+  .s6 { padding: 36px 24px 32px; }
+  .footer-logo-big { width: 80%; max-width: 380px; }
+  .footer-bottom-row { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .footer-logo-sm { width: 100px; }
+}
+
+/* ── Большой телефон ── */
+@media (max-width: 480px) {
+  /* Nav */
+  .nav img { width: 90px; }
+
+  /* Hero */
+  .hero-text { padding: 90px 16px 0; gap: 10px; }
+  .hero-question { font-size: 22px; }
+  .hero-tagline   { font-size: 13px; }
+  .hero-desc      { font-size: 13px; }
+  .hero-cat { display: none; } /* кот убирается на маленьком экране */
+  .hero-clothes-overlay { width: 65%; left: 18%; }
+  .roller-bar-wrap { width: 300px; }
+
+  /* BA slider */
+  .ba-slider-wrap { aspect-ratio: 3/2; border-radius: 8px; }
+  .ba-handle { width: 42px; height: 42px; }
+
+  /* Captcha */
+  .s3 { padding: 16px 16px 50px; gap: 24px; }
+  .s3-title { font-size: 28px; }
+  .cap-header { font-size: 14px; padding: 12px 14px; }
+
+  /* Fengshui */
+  .s4 { padding: 50px 16px; }
+  .s4-title img { max-width: 90%; }
+  .s4-desc-row p { font-size: 14px; }
+  .drag-items-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .drag-item { padding: 12px 8px; }
+  .drag-item img { width: 40px; height: 40px; }
+  .drag-item-name { font-size: 13px; }
+
+  /* Footer */
+  .s5 { padding: 50px 16px 36px; }
+  .footer-tagline { font-size: clamp(32px, 9vw, 54px); }
+  .footer-gradient-bar { width: 80%; height: 8px; }
+  .s6 { padding: 28px 16px 28px; }
+  .footer-logo-big { width: 88%; max-width: 280px; }
+  .footer-year { font-size: 24px; }
+}
+
+/* ── Маленький телефон ── */
+@media (max-width: 360px) {
+  .hero-text { padding: 80px 12px 0; }
+  .hero-question { font-size: 19px; }
+  .s3 { padding: 12px 12px 40px; }
+  .s4 { padding: 40px 12px; }
+  .s5 { padding: 40px 12px 28px; }
+  .s6 { padding: 24px 12px 24px; }
+  .drag-items-grid { gap: 8px; }
+  .drag-item { padding: 10px 6px; gap: 6px; }
+  .footer-tagline { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-paint" id="scrollPaint">
+  <div class="paint-fill" id="paintFill"></div>
+
+  <img
+    src="images/malendern_media_logo.svg"
+    alt="Малендерн Медиа"
+    class="paint-logo"
+  >
+
+  <img
+    src="images/paint_roller_icon.png"
+    alt="Валик"
+    class="paint-roller"
+    id="paintRoller"
+  >
+</div>
+
+
+<!-- ══════════════════════════════════
+     S1 — HERO
+══════════════════════════════════ -->
+<section class="s1">
+<br>
+<br>
+  <div class="hero-text">
+    <p class="hero-question">Закончили ремонт и не знаете, что&nbsp;дальше?</p>
+    <p class="hero-tagline">Два способа дать интерьеру новую жизнь</p>
+    <br>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     S2 — BEFORE/AFTER SLIDER (FIX 5: one slider only)
+══════════════════════════════════ -->
+<section class="s2">
+  <div class="ba-title-wrap">
+    <img id="baTitleImg" src="images/Покрывало_от_бардака_title_before.svg" alt="До/После">
+     <p class="hero-desc">ИИ альтернатива судорожному запихиванию одежды со&nbsp;стула и&nbsp;упаковок от&nbsp;чипсов в&nbsp;шкаф или&nbsp;под&nbsp;кровать</p>
+  </div>
+
+  <div class="ba-slider-wrap" id="baWrap">
+    <!-- BEFORE: bed with clothes on it -->
+    <div class="ba-before-wrap">
+      <img class="ba-bed" src="images/bed.png" alt="до" draggable="false">
+      <img class="ba-clothes" id="baClothes" src="images/pile_of_clothes_before.png" alt="" draggable="false">
+    </div>
+
+    <!-- AFTER: clean bed, reveals from left as you drag -->
+    <img class="ba-img ba-after" id="baAfter" src="images/bed.png" alt="после" draggable="false">
+
+    <div class="ba-divider" id="baDivider">
+      <div class="ba-handle"></div>
+    </div>
+  </div>
+  <p class="ba-hint">← тяни слайдер →</p>
+</section>
+
+<!-- ══════════════════════════════════
+     S3 — CAPTCHA
+     FIX 6,7,8
+══════════════════════════════════ -->
+<section class="s3">
+  <div class="s3-row">
+
+    <!-- Левая колонка: только капча -->
+    <div class="s3-left">
+      <div class="captcha-box">
+        <div class="cap-header">
+          Фото загружено успешно!<br>
+          Выберите нежелательные вещи
+        </div>
+        <div class="cap-grid" id="capGrid"></div>
+        <div class="cap-footer">
+          <div class="cap-icons">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <button class="cap-reset-btn" id="capResetBtn" title="Сбросить выбор">
+              <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            </button>
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          </div>
+          <button class="cap-btn" id="capBtn">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Правая колонка: заголовок + кровать -->
+    <div class="s3-right">
+      <h2 class="s3-title">Научи его скрывать<br> именно твой мусор</h2>
+      <div class="cap-bed-wrap" style="border-radius: 12px 0 0 12px;">
+        <img class="cap-bed-base" src="images/bed_for_capcha.png" alt="кровать">
+        <div class="cap-clutter-overlay" id="clutterOverlay">
+          <div class="clutter-item" id="ci0" style="top:45%;left:25%;width:18%;height:20%"><img src="images/clothes_1.png" alt=""></div>
+          <div class="clutter-item" id="ci1" style="top:50%;left:3%;width:20%;height:18%"><img src="images/clothes_2.png" alt=""></div>
+          <div class="clutter-item" id="ci2" style="top:24%;left:52%;width:16%;height:18%"><img src="images/clothes_3.png" alt=""></div>
+          <div class="clutter-item" id="ci3" style="top:44%;left:72%;width:16%;height:18%"><img src="images/clothes_4.png" alt=""></div>
+          <div class="clutter-item" id="ci4" style="top:50%;left:50%;width:18%;height:18%"><img src="images/clothes_5.png" alt=""></div>
+          <div class="clutter-item" id="ci5" style="top:28%;left:35%;width:14%;height:16%"><img src="images/clothes_6.png" alt=""></div>
+          <div class="clutter-item" id="ci6" style="top:55%;left:82%;width:14%;height:16%"><img src="images/clothes_7.png" alt=""></div>
+          <div class="clutter-item" id="ci7" style="top:70%;left:14%;width:16%;height:18%"><img src="images/clothes_8.png" alt=""></div>
+          <div class="clutter-item" id="ci8" style="top:75%;left:60%;width:16%;height:30%"><img src="images/clothes_9.png" alt=""></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     S4 — FENGSHUI (FIX 9)
+══════════════════════════════════ -->
+<section class="s4">
+  <div class="s4-title">
+    <img src="images/Feng_shui_title.svg" alt="Фен-шуй">
+  </div>
+
+  <div class="s4-desc-row">
+    <p>Фен шуй — древняя китайская практика, которая помогает организовать пространство так, чтобы в нём было проще жить. Сегодня фен шуй часто используют как понятный набор правил удобного и спокойного интерьера.</p>
+    <p>В фен шуе цвет считают инструментом, который задаёт ощущение зоны. Обычно оттенки связывают с пятью стихиями: дерево, огонь, земля, металл, вода.</p>
+  </div>
+
+  <div class="s4-workspace">
+
+    <!-- Левая колонка: комната -->
+    <div class="room-wrap" id="roomWrap">
+      <img class="room-svg" src="images/empty_room.svg" alt="комната">
+      <div class="room-drop-overlay" id="roomDrop"></div>
+    </div>
+
+    <!-- Правая колонка: заголовок + мебель + результат -->
+    <div class="items-panel">
+
+      <h3 class="fs-question">Оценит ли китаец вашу&nbsp;обстановку?</h3>
+
+      <!-- Результат — скрыт пока вся мебель не расставлена -->
+      <div class="fs-result" id="fsResult" style="display:none;">
+        <div class="fs-result-bar" id="fsResultBar"></div>
+        <p class="fs-result-text" id="fsResultText"></p>
+      </div>
+
+      <div class="items-panel-top">
+        <span class="items-panel-title">Перетащи в комнату:</span>
+        <button class="fs-reset-btn" id="fsResetBtn" title="Сбросить">
+          <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        </button>
+      </div>
+
+      <div class="drag-items-grid">
+        <div class="drag-item" draggable="true" data-item="bed" data-label="Кровать" id="dBed">
+          <img src="images/bed_icon.svg" alt="">
+          <span class="drag-item-name">Кровать</span>
+        </div>
+        <div class="drag-item" draggable="true" data-item="closet" data-label="Шкаф" id="dCloset">
+          <img src="images/closet_icon.svg" alt="">
+          <span class="drag-item-name">Шкаф</span>
+        </div>
+        <div class="drag-item" draggable="true" data-item="table" data-label="Стол" id="dTable">
+          <img src="images/table_icon.svg" alt="">
+          <span class="drag-item-name">Стол</span>
+        </div>
+        <div class="drag-item" draggable="true" data-item="ficus" data-label="Фикус" id="dFicus">
+          <img src="images/ficus_icon.svg" alt="">
+          <span class="drag-item-name">Фикус</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     S5 — 4 WALLS (FIX 10: gap before footer)
+══════════════════════════════════ -->
+  <p class="footer-tagline">4 стены —<br>бесконечные возможности</p>
+  <div class="s5-logo-wrap">
+    <img src="images/malendern_logo.svg" alt="малендерн" class="s5-logo-full">
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     S6 — FOOTER (FIX 10: smaller logo)
+══════════════════════════════════ -->
+<footer class="s6">
+  <div class="footer-bg-anim"></div>
+  <div class="footer-inner">
+    <div class="footer-bottom-row">
+      <img class="footer-logo-sm" src="images/malendern_media_logo.svg" alt="Malendern">
+      <span class="footer-year">2026</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
+<script>
+/* ── 1. ROLLER BAR: moves right on scroll ── */
+(function () {
+  const wrap = document.getElementById('rollerBarWrap');
+  window.addEventListener('scroll', () => {
+    const ratio = window.scrollY / (document.body.scrollHeight - window.innerHeight || 1);
+    wrap.style.transform = 'translateX(' + (ratio * (window.innerWidth + 600)) + 'px)';
+  }, { passive: true });
+})();
+
+/* ── 2. BEFORE/AFTER SLIDER ── */
+(function () {
+  const wrap    = document.getElementById('baWrap');
+  const after   = document.getElementById('baAfter');
+  const clothes = document.getElementById('baClothes');
+  const divider = document.getElementById('baDivider');
+  const titleImg = document.getElementById('baTitleImg');
+  let dragging = false;
+
+  function update(clientX) {
+    const r = wrap.getBoundingClientRect();
+    let p = Math.max(0.02, Math.min(0.98, (clientX - r.left) / r.width));
+    after.style.clipPath = 'inset(0 ' + ((1 - p) * 100) + '% 0 0)';
+    divider.style.left = (p * 100) + '%';
+    // clothes disappear instantly once slider passes midpoint
+    clothes.style.opacity = p > 0.7 ? '0' : '1';
+    // Title image swap
+    titleImg.src = p > 0.5
+      ? 'images/Покрывало_от_бардака_title_after.svg'
+      : 'images/Покрывало_от_бардака_title_before.svg';
+  }
+
+  wrap.addEventListener('mousedown',  e => { dragging = true; update(e.clientX); });
+  wrap.addEventListener('touchstart', e => { dragging = true; update(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('mousemove',  e => { if (dragging) update(e.clientX); });
+  window.addEventListener('touchmove',  e => { if (dragging) update(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('mouseup',  () => dragging = false);
+  window.addEventListener('touchend', () => dragging = false);
+})();
+
+/* ── 3. CAPTCHA ── */
+(function () {
+  const CELLS = [
+    { img: 'images/clothes_1.png', ci: 'ci0' },
+    { img: 'images/clothes_2.png', ci: 'ci1' },
+    { img: 'images/clothes_3.png', ci: 'ci2' },
+    { img: 'images/clothes_4.png', ci: 'ci3' },
+    { img: 'images/clothes_5.png', ci: 'ci4' },
+    { img: 'images/clothes_6.png', ci: 'ci5' },
+    { img: 'images/clothes_7.png', ci: 'ci6' },
+    { img: 'images/clothes_8.png', ci: 'ci7' },
+    { img: 'images/clothes_9.png', ci: 'ci8' },
+  ];
+  const grid = document.getElementById('capGrid');
+  const selected = new Set();
+
+  // Build grid cells
+  function buildGrid() {
+    grid.innerHTML = '';
+    selected.clear();
+    CELLS.forEach((cell, i) => {
+      const div = document.createElement('div');
+      div.className = 'cap-cell';
+      div.innerHTML =
+        '<img src="' + cell.img + '" alt="">' +
+        '<div class="cap-tick"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>';
+      div.addEventListener('click', () => {
+        div.classList.toggle('sel');
+        if (div.classList.contains('sel')) selected.add(i);
+        else selected.delete(i);
+      });
+      grid.appendChild(div);
+    });
+  }
+  buildGrid();
+
+  // Confirm button
+  document.getElementById('capBtn').addEventListener('click', () => {
+    if (!selected.size) { showToast('Выберите хотя бы один предмет!'); return; }
+    selected.forEach(i => {
+      const el = document.getElementById(CELLS[i].ci);
+      if (el) el.classList.add('gone');
+      const cell = grid.children[i];
+      cell.style.opacity = '.2';
+      cell.style.pointerEvents = 'none';
+      cell.classList.remove('sel');
+    });
+    showToast('✓ Убрано ' + selected.size + ' предмет(ов) с кровати!');
+    selected.clear();
+  });
+
+  // FIX 7: Reset button — restore everything
+  document.getElementById('capResetBtn').addEventListener('click', () => {
+    // Restore clutter items on bed
+    CELLS.forEach(cell => {
+      const el = document.getElementById(cell.ci);
+      if (el) el.classList.remove('gone');
+    });
+    // Rebuild captcha grid
+    buildGrid();
+    showToast('Все вещи возвращены на место');
+  });
+})();
+
+/* ── 4. FENGSHUI DRAG & DROP ── */
+(function () {
+  const roomWrap = document.getElementById('roomWrap');
+  const dropZone = document.getElementById('roomDrop');
+  let dragged = null;
+
+  const ICONS = {
+    bed:    'images/bed_icon.svg',
+    closet: 'images/closet_icon.svg',
+    table:  'images/table_icon.svg',
+    ficus:  'images/ficus_icon.svg',
+  };
+
+  // Drag events
+  document.querySelectorAll('.drag-item').forEach(el => {
+    el.addEventListener('dragstart', () => { dragged = el; });
+  });
+
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('over');
+  });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('over');
+    if (!dragged || dragged.classList.contains('used')) return;
+    const rr = roomWrap.getBoundingClientRect();
+    let x = e.clientX - rr.left - 34;
+    let y = e.clientY - rr.top  - 34;
+    x = Math.max(4, Math.min(rr.width  - 74, x));
+    y = Math.max(4, Math.min(rr.height - 74, y));
+    place(dragged, x, y);
+    dragged = null;
+  });
+
+  // Touch
+  let touchEl = null;
+  document.querySelectorAll('.drag-item').forEach(el => {
+    el.addEventListener('touchstart', () => touchEl = el, { passive: true });
+  });
+  document.addEventListener('touchend', e => {
+    if (!touchEl) return;
+    const t = e.changedTouches[0];
+    const rr = roomWrap.getBoundingClientRect();
+    if (t.clientX >= rr.left && t.clientX <= rr.right &&
+        t.clientY >= rr.top  && t.clientY <= rr.bottom) {
+      if (!touchEl.classList.contains('used')) {
+        let x = t.clientX - rr.left - 34;
+        let y = t.clientY - rr.top  - 34;
+        x = Math.max(4, Math.min(rr.width  - 74, x));
+        y = Math.max(4, Math.min(rr.height - 74, y));
+        place(touchEl, x, y);
+      }
+    }
+    touchEl = null;
+  });
+
+const TOTAL_ITEMS = 4; // кровать, шкаф, стол, фикус
+let placedCount = 0;
+let bedNearWindow = false;
+function place(src, x, y) {
+  if (src.classList.contains('used')) return;
+const cols = 3, rows = 3;
+const rr = roomWrap.getBoundingClientRect();
+const slotW = (rr.width  * 0.82) / cols;
+const slotH = (rr.height * 0.75) / rows;
+const offsetX = rr.width  * 0.09;
+const offsetY = rr.height * 0.10;
+
+const col = Math.round((x - offsetX) / slotW);  // ← исправлено
+const row = Math.round((y - offsetY) / slotH);  // ← исправлено
+const snappedCol = Math.max(0, Math.min(cols - 1, col));
+const snappedRow = Math.max(0, Math.min(rows - 1, row));
+
+x = offsetX + snappedCol * slotW + slotW / 2 - 40;
+y = offsetY + snappedRow * slotH + slotH / 2 - 40;
+  const type  = src.dataset.item;
+  const label = src.dataset.label;
+  const el = document.createElement('div');
+  el.className = 'placed-item';
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  el.innerHTML = '<img src="' + ICONS[type] + '" alt="">';
+roomWrap.appendChild(el);
+src.classList.add('used');
+
+// Сначала запоминаем позицию кровати
+if (type === 'bed') {
+  bedNearWindow = y < roomWrap.offsetHeight * 0.35 && x < roomWrap.offsetWidth * 0.5;
+}
+
+// Потом красим — теперь bedNearWindow уже правильный
+if (type === 'bed') {
+  src.style.background = bedNearWindow
+    ? 'rgba(220, 50, 50, 0.3)'
+    : 'rgba(50, 200, 80, 0.3)';
+  src.style.borderColor = bedNearWindow ? '#e83d3d' : '#3de87a';
+} else {
+  src.style.background = 'rgba(50, 200, 80, 0.3)';
+  src.style.borderColor = '#3de87a';
+}
+  placedCount++;
+
+  // Запоминаем позицию кровати
+  if (type === 'bed') {
+    bedNearWindow = y < roomWrap.offsetHeight * 0.35 && x < roomWrap.offsetWidth * 0.5;
+  }
+
+  // Когда вся мебель расставлена — показываем результат
+  if (placedCount === TOTAL_ITEMS) {
+    showResult();
+  }
+
+  makeDraggableInRoom(el);
+}
+
+function showResult() {
+  const result = document.getElementById('fsResult');
+  const bar    = document.getElementById('fsResultBar');
+  const text   = document.getElementById('fsResultText');
+  result.style.display = 'block';
+
+  if (bedNearWindow) {
+    bar.className  = 'fs-result-bar bad';
+    text.textContent = 'Не правильно( По фен-шуй, кровать не должна стоять изголовьем к окну.';
+  } else {
+    bar.className  = 'fs-result-bar good';
+    text.textContent = 'Правильно! Расстановка соответствует фен-шуй.';
+  }
+}
+
+  function makeDraggableInRoom(el) {
+    let sx, sy, sl, st, mv = false;
+    el.addEventListener('mousedown', e => {
+      mv = true; sx = e.clientX; sy = e.clientY;
+      sl = parseInt(el.style.left); st = parseInt(el.style.top);
+      e.stopPropagation();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!mv) return;
+      const rr = roomWrap.getBoundingClientRect();
+      el.style.left = Math.max(0, Math.min(rr.width  - 70, sl + (e.clientX - sx))) + 'px';
+      el.style.top  = Math.max(0, Math.min(rr.height - 70, st + (e.clientY - sy))) + 'px';
+    });
+    document.addEventListener('mouseup', () => mv = false);
+  }
+
+  function showWarning() {
+    roomWrap.querySelectorAll('.fs-warning').forEach(w => w.remove());
+    const w = document.createElement('div');
+    w.className = 'fs-warning';
+    w.innerHTML = '❌ Неправильно!<br>Изголовье кровати к окну — плохой фен-шуй';
+    roomWrap.appendChild(w);
+    setTimeout(() => w.remove(), 4500);
+  }
+
+  // FIX 9: Reset button — remove all placed items, restore drag items
+document.getElementById('fsResetBtn').addEventListener('click', () => {
+  roomWrap.querySelectorAll('.placed-item').forEach(el => el.remove());
+  roomWrap.querySelectorAll('.fs-warning').forEach(el => el.remove());
+  document.querySelectorAll('.drag-item').forEach(el => {
+  el.classList.remove('used');
+  el.style.background = '';
+  el.style.borderColor = '';
+});
+  placedCount = 0;
+  bedNearWindow = false;
+  document.getElementById('fsResult').style.display = 'none';
+  showToast('Комната сброшена');
+});
+})();
+
+/* ── TOAST ── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+const paintFill = document.getElementById('paintFill');
+const paintRoller = document.getElementById('paintRoller');
+
+function updateScrollPaint() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+  let progress = 0;
+
+  if (docHeight > 0) {
+    progress = scrollTop / docHeight;
+  }
+
+  progress = Math.max(0, Math.min(progress, 1));
+
+  const rollerStart = 410;
+  const rollerTravel = window.innerWidth - rollerStart - 120;
+
+  const currentPaintWidth = rollerStart + rollerTravel * progress;
+  const currentRollerX = rollerTravel * progress;
+
+  paintFill.style.width = `${currentPaintWidth}px`;
+  paintRoller.style.transform = `translateX(${currentRollerX}px)`;
+}
+
+window.addEventListener('scroll', updateScrollPaint);
+window.addEventListener('resize', updateScrollPaint);
+window.addEventListener('load', updateScrollPaint);
+</script>
+</body>
+</html>
